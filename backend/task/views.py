@@ -8,4 +8,4 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TaskSerializer
 
     filter_backends = [filters.OrderingFilter]
-    ordering = ['creation_date', '-was_completed']
+    ordering = ['was_completed', 'creation_date']
