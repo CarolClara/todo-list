@@ -8,25 +8,57 @@ Vue.use(VueAxios, axios)
 
 export default new Vuex.Store({
     state: {
-        tasks: []
+        tasks: [],
+        message: ''
     },
 
     getters: {
-        tasks: state => state.tasks
+        tasks: state => state.tasks,
+        msg: state => state.message
     },
 
     mutations: {
-        GET_TASKS (state, tasks) {
+        LIST_TASKS (state, tasks) {
             state.tasks = tasks
+        },
+        SAVE_TASK_CHANGES (state) {
+            state.message = 'Tarefa alterada com sucesso.'
+        },
+        CREATE_TASK (state) {
+            state.message = 'Tarefa criada com sucesso.'
+        },
+        REMOVE_TASK (state) {
+            state.message = 'Tarefa removida com sucesso'
         }
     },
 
     actions: {
-        getTasks({commit}) {
+        getTasks({ commit }) {
             axios
                 .get('http://localhost:8001/todolist/tasks/')
                 .then(response => Promise.resolve(response.data))
-                .then(tasks => commit('GET_TASKS', tasks))
+                .then(tasks => commit('LIST_TASKS', tasks))
+                .catch(error => Promise.reject(error))
+        },
+        saveChanges({ commit }, payload) {
+            axios
+                .put(`http://localhost:8001/todolist/tasks/${payload.id}/`, payload)
+                .then(response => Promise.resolve(response.data))
+                .then(commit('SAVE_TASK_CHANGES'))
+                .catch(error => Promise.reject(error))
+        },
+        createTask({ commit }, newTask) {
+            axios
+                .post('http://localhost:8001/todolist/tasks/', newTask)
+                .then(response => Promise.resolve(response.data))
+                .then(commit('CREATE_TASK'))
+                .catch(error => Promise.reject(error))
+        },
+        removeTask({commit}, payload) {
+            axios
+                .delete(`http://localhost:8001/todolist/tasks/${payload.id}/`, )
+                .then(response => Promise.resolve(response.data))
+                .then(commit('REMOVE_TASK'))
                 .catch(error => Promise.reject(error))
         }
     }
