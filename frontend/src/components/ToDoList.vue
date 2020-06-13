@@ -79,20 +79,20 @@ export default {
     ...mapState ({tasks: 'tasks', msg: 'message'})
   },
   methods: {
+    // TODO: Corrigir reatividade
     async saveChanges (task) {
       await this.$store.dispatch('saveChanges', task)
-      await this.$store.dispatch('getTasks')
-      console.log(this.tasks)
+      this.$forceUpdate()
       this.callMsg()
     },
     async createTask () {
       await this.$store.dispatch('createTask', this.newTask)
-      await this.$store.dispatch('getTasks')
+      this.$forceUpdate()
       this.callMsg()
     },
     async removeTask (task) {
       await this.$store.dispatch('removeTask', task)
-      await this.$store.dispatch('getTasks')
+      this.$forceUpdate()
       this.callMsg()
     },
     callMsg() {
